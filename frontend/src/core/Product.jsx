@@ -61,18 +61,18 @@ const Product = () => {
 
         <Grid container spacing={4} justifyContent='center'>
           <Grid item xs={12} md={5}>
-            <Typography variant='h4' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
+            <Typography variant='h4' gutterBottom className="text-gray-900 dark:text-white transition-colors duration-300">
               Product Details
             </Typography>
             {product ? (
               <Card product={product} showViewProductButton={false} />
             ) : (
-              <Typography className="text-apple-gray-600 dark:text-dark-text-secondary transition-colors duration-300">Loading product...</Typography>
+              <Typography className="text-gray-600 dark:text-gray-300 transition-colors duration-300">Loading product...</Typography>
             )}
           </Grid>
 
           <Grid item xs={12} md={7}>
-            <Typography variant='h5' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
+            <Typography variant='h5' gutterBottom className="text-gray-900 dark:text-white transition-colors duration-300">
               Related Products
             </Typography>
 
@@ -92,7 +92,7 @@ const Product = () => {
                   <Card key={i} product={product} />
                 ))
               ) : (
-                <Typography className="text-apple-gray-600 dark:text-dark-text-secondary transition-colors duration-300">No related products found.</Typography>
+                <Typography className="text-gray-600 dark:text-gray-300 transition-colors duration-300">No related products found.</Typography>
               )}
             </Box>
           </Grid>

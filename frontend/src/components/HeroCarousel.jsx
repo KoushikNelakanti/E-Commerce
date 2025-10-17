@@ -142,14 +142,14 @@ const HeroCarousel = () => {
           <div className="mt-10 flex items-center gap-4">
             <button
               onClick={() => handleNavigate(-1)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-apple-gray-300 dark:border-dark-border text-apple-gray-700 dark:text-dark-text-secondary hover:border-apple-gray-500 hover:text-apple-gray-900 dark:hover:border-dark-text-secondary dark:hover:text-dark-text-primary transition-colors duration-300"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-gray-500 hover:text-gray-900 dark:hover:border-gray-400 dark:hover:text-white transition-colors duration-300"
               aria-label="Previous slide"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={() => handleNavigate(1)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-apple-gray-300 dark:border-dark-border text-apple-gray-700 dark:text-dark-text-secondary hover:border-apple-gray-500 hover:text-apple-gray-900 dark:hover:border-dark-text-secondary dark:hover:text-dark-text-primary transition-colors duration-300"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-gray-500 hover:text-gray-900 dark:hover:border-gray-400 dark:hover:text-white transition-colors duration-300"
               aria-label="Next slide"
             >
               <ChevronRight className="h-5 w-5" />
@@ -162,8 +162,8 @@ const HeroCarousel = () => {
                   onClick={() => handleDotClick(index)}
                   className={`h-2.5 rounded-full transition-all duration-300 ${
                     index === activeIndex
-                      ? 'w-8 bg-apple-blue-500 dark:bg-dark-blue-500'
-                      : 'w-2.5 bg-apple-gray-300 dark:bg-dark-surface-tertiary hover:bg-apple-gray-400 dark:hover:bg-dark-text-tertiary'
+                      ? 'w-8 bg-blue-500 dark:bg-blue-400'
+                      : 'w-2.5 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-400'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />

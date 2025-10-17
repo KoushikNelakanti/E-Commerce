@@ -131,14 +131,14 @@ const Search = () => {
           </div>
 
           {/* Search Input */}
-          <div className="relative flex-1 w-full">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-apple-gray-400" />
+          <div className="relative flex-grow">
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-apple-gray-400 dark:text-dark-text-tertiary" />
             <input
-              type="text"
-              placeholder="Search products..."
-              value={search}
+              type="search"
+              value={data.search}
               onChange={handleChange('search')}
-              className="w-full pl-10 pr-4 py-3 bg-apple-gray-50 border border-apple-gray-200 rounded-xl text-apple-gray-900 placeholder-apple-gray-500 focus:outline-none focus:ring-2 focus:ring-apple-blue-500 focus:border-transparent"
+              placeholder="Search products..."
+              className="w-full pl-10 pr-4 py-3 bg-apple-gray-50 dark:bg-dark-surface-secondary border border-apple-gray-200 dark:border-dark-border rounded-xl text-apple-gray-900 dark:text-dark-text-primary placeholder-apple-gray-500 dark:placeholder-dark-text-tertiary focus:outline-none focus:ring-2 focus:ring-apple-blue-500 dark:focus:ring-dark-blue-500 focus:border-transparent transition-colors duration-300"
             />
           </div>
 

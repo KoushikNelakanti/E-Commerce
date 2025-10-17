@@ -145,7 +145,7 @@ const Shop = () => {
           </div>
         </Grid>
         <Grid size={{ xs: 12, md: 9 }}>
-          <Typography variant='h4' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
+          <Typography variant='h4' gutterBottom className="text-gray-900 dark:text-white transition-colors duration-300">
             Products
           </Typography>
           <Box
@@ -166,7 +166,7 @@ const Shop = () => {
               </Grid>
             ))}
           </Box>
-          <hr className="border-apple-gray-200 dark:border-dark-border" />
+          <hr className="border-gray-200 dark:border-gray-700" />
           {loadMoreButton()}
         </Grid>
       </Grid>

@@ -70,14 +70,14 @@ const AppleNavbar = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-dark-surface/90 backdrop-blur-xl border-b border-apple-gray-200 dark:border-dark-border transition-colors duration-300"
+      className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <Store className="h-8 w-8 text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300" />
-            <span className="text-xl font-semibold text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">ShopEase</span>
+            <Store className="h-8 w-8 text-gray-900 dark:text-white transition-colors duration-300" />
+            <span className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">ShopEase</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -89,14 +89,14 @@ const AppleNavbar = () => {
                   to={item.path}
                   className={`flex items-center space-x-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                     isActive(item.path)
-                      ? 'bg-apple-gray-100 dark:bg-dark-surface-secondary text-apple-gray-900 dark:text-dark-text-primary'
-                      : 'text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text-primary hover:bg-apple-gray-50 dark:hover:bg-dark-surface-secondary'
+                      ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   <item.icon className="h-4 w-4" />
                   <span>{item.label}</span>
                   {item.badge > 0 && (
-                    <span className="ml-1 bg-apple-blue-500 dark:bg-dark-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    <span className="ml-1 bg-blue-500 dark:bg-blue-400 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                       {item.badge}
                     </span>
                   )}
@@ -106,7 +106,7 @@ const AppleNavbar = () => {
             {isAuthenticated() && (
               <button
                 onClick={handleSignout}
-                className="flex items-center space-x-1 px-3 py-2 rounded-full text-sm font-medium text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text-primary hover:bg-apple-gray-50 dark:hover:bg-dark-surface-secondary transition-all duration-200"
+                className="flex items-center space-x-1 px-3 py-2 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Sign Out</span>
@@ -122,7 +122,7 @@ const AppleNavbar = () => {
             <DarkModeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text-primary hover:bg-apple-gray-50 dark:hover:bg-dark-surface-secondary transition-colors"
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               <MenuIcon className="h-6 w-6" />
             </button>
@@ -135,7 +135,7 @@ const AppleNavbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden py-4 border-t border-apple-gray-200 dark:border-dark-border"
+            className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700"
           >
             <div className="space-y-2">
               {navItems.map((item) => 
@@ -146,14 +146,14 @@ const AppleNavbar = () => {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive(item.path)
-                        ? 'bg-apple-gray-100 dark:bg-dark-surface-secondary text-apple-gray-900 dark:text-dark-text-primary'
-                        : 'text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text-primary hover:bg-apple-gray-50 dark:hover:bg-dark-surface-secondary'
+                        ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                        : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <item.icon className="h-5 w-5" />
                     <span>{item.label}</span>
                     {item.badge > 0 && (
-                      <span className="ml-auto bg-apple-blue-500 dark:bg-dark-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      <span className="ml-auto bg-blue-500 dark:bg-blue-400 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                         {item.badge}
                       </span>
                     )}
@@ -163,7 +163,7 @@ const AppleNavbar = () => {
               {isAuthenticated() && (
                 <button
                   onClick={handleSignout}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text-primary hover:bg-apple-gray-50 dark:hover:bg-dark-surface-secondary transition-all duration-200 w-full text-left"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 w-full text-left"
                 >
                   <LogOut className="h-5 w-5" />
                   <span>Sign Out</span>

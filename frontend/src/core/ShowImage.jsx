@@ -5,7 +5,7 @@ const ShowImage = ({ item, url }) => {
   // Check if the item is from Fake Store API (has image property directly)
   if (item.image) {
     return (
-      <div className='product-img' style={{ height: '250px' }}>
+      <div className='product-img bg-gray-50 dark:bg-gray-700' style={{ height: '250px' }}>
         <img
           src={item.image}
           alt={item.name || item.title}
@@ -25,7 +25,7 @@ const ShowImage = ({ item, url }) => {
 
   // Fallback to local API image handling
   return (
-    <div className='product-img' style={{ height: '250px' }}>
+    <div className='product-img bg-gray-50 dark:bg-gray-700' style={{ height: '250px' }}>
       <img
         src={`${API}/${url}/photo/${item._id}`}
         alt={item.name}
@@ -37,6 +37,7 @@ const ShowImage = ({ item, url }) => {
           display: 'flex',
           marginLeft: 'auto',
           marginRight: 'auto',
+          backgroundColor: 'transparent',
         }}
       />
     </div>
