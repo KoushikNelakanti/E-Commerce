@@ -18,6 +18,7 @@ import UpdateProduct from './admin/UpdateProduct';
 import CategoryList from './admin/CategoryList';
 import UsersList from './admin/UsersList';
 import NotFound from './core/NotFound';
+import ForgotPassword from './user/ForgotPassword';
 
 const AppRoutes = () => {
   return (
@@ -27,10 +28,11 @@ const AppRoutes = () => {
         <Route path='/shop' element={<Shop />} />
         <Route path='/signin' element={<Signin />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/product/:productId' element={<Product />} />
         <Route path='/cart' element={<Cart />} />
 
-        {/* Private Routes */}
+        {/* Private Routes */}}
         <Route
           path='/user/dashboard'
           element={

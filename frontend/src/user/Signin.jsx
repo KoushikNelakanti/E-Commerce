@@ -17,11 +17,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import Copyright from '../core/Copyright.jsx';
 import { signin, authenticate, isAuthenticated } from '../auth/index.js';
+import { useAppTheme } from '../hooks/useTheme';
 
 // Create styled components using MUI v5 styled API
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   margin: theme.spacing(1),
-  backgroundColor: theme.palette.secondary.main,
+  backgroundColor: theme.palette.primary.main,
 }));
 
 const FormContainer = styled('form')(({ theme }) => ({
@@ -31,9 +32,22 @@ const FormContainer = styled('form')(({ theme }) => ({
 
 const SubmitButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(3, 0, 2),
+  padding: theme.spacing(1.5),
+  borderRadius: '9999px',
+  fontWeight: 600,
+  textTransform: 'none',
+}));
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.primary.main,
+  '&:hover': {
+    textDecoration: 'underline',
+  },
 }));
 
 export default function Signin() {
+  const theme = useAppTheme();
   const [values, setValues] = useState({
     email: '',
     password: '',
@@ -73,7 +87,15 @@ export default function Signin() {
 
   const showError = () =>
     error && (
-      <Alert severity='error' sx={{ width: '100%', mb: 2 }}>
+      <Alert 
+        severity='error' 
+        sx={{ 
+          width: '100%', 
+          mb: 2,
+          borderRadius: '12px',
+          bgcolor: theme.palette.mode === 'dark' ? 'rgba(255, 69, 58, 0.1)' : 'rgba(255, 69, 58, 0.05)',
+        }}
+      >
         {error}
       </Alert>
     );
@@ -100,8 +122,8 @@ export default function Signin() {
 
   return (
     <Layout
-      title='Signin page'
-      description='Signin to MERN E-commerce App'
+      title='Sign In'
+      description='Sign in to your account'
       className='container col-md-8 offset-md-2'
     >
       <Container component='main' maxWidth='xs'>
@@ -112,6 +134,12 @@ export default function Signin() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            padding: 3,
+            borderRadius: '16px',
+            boxShadow: theme.palette.mode === 'dark' 
+              ? '0 10px 25px -3px rgba(0, 0, 0, 0.4)' 
+              : '0 10px 25px -3px rgba(0, 0, 0, 0.1)',
+            bgcolor: theme.palette.background.paper,
           }}
         >
           {showError()}
@@ -122,8 +150,27 @@ export default function Signin() {
             <LockOutlinedIcon />
           </StyledAvatar>
 
-          <Typography component='h1' variant='h5'>
-            Sign in
+          <Typography 
+            component='h1' 
+            variant='h5'
+            sx={{ 
+              fontWeight: 600,
+              color: theme.palette.text.primary,
+            }}
+          >
+            Welcome Back
+          </Typography>
+          
+          <Typography 
+            variant='body2' 
+            sx={{ 
+              mt: 1, 
+              mb: 3,
+              color: theme.palette.text.secondary,
+              textAlign: 'center',
+            }}
+          >
+            Sign in to continue to your account
           </Typography>
 
           <FormContainer onSubmit={clickSubmit} noValidate>
@@ -139,6 +186,11 @@ export default function Signin() {
               type='email'
               value={email}
               autoFocus
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                },
+              }}
             />
 
             <TextField
@@ -152,6 +204,11 @@ export default function Signin() {
               onChange={handleChange('password')}
               value={password}
               autoComplete='current-password'
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                },
+              }}
             />
 
             <FormControlLabel
@@ -164,6 +221,9 @@ export default function Signin() {
                 />
               }
               label='Remember me'
+              sx={{
+                color: theme.palette.text.secondary,
+              }}
             />
 
             <SubmitButton
@@ -172,24 +232,24 @@ export default function Signin() {
               variant='contained'
               disabled={loading}
             >
-              Sign In
+              {loading ? 'Signing In...' : 'Sign In'}
             </SubmitButton>
 
-            <Grid container justifyContent='space-between'>
+            <Grid container justifyContent='space-between' sx={{ mt: 2 }}>
               <Grid item>
                 <Typography variant='body2'>
-                  <Link to='/forgot-password' variant='body2'>
+                  <StyledLink to='/forgot-password'>
                     Forgot password?
-                  </Link>
+                  </StyledLink>
                 </Typography>
               </Grid>
 
               <Grid item>
                 <Typography variant='body2'>
                   {"Don't have an account? "}
-                  <Link to='/signup' variant='body2'>
+                  <StyledLink to='/signup'>
                     {'Sign Up'}
-                  </Link>
+                  </StyledLink>
                 </Typography>
               </Grid>
             </Grid>

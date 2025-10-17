@@ -25,13 +25,13 @@ const UserSidebar = ({ userId }) => {
 
   return (
     <Grid size={{ xs: 12, md: 3 }}>
-      <Card elevation={3}>
+      <Card elevation={3} sx={{ bgcolor: 'background.paper' }}>
         <CardHeader
           title='User Menu'
           titleTypographyProps={{ variant: 'h6' }}
           sx={{ bgcolor: 'primary.main', color: 'common.white' }}
         />
-        <Divider />
+        <Divider sx={{ borderColor: 'divider' }} />
         <List dense>
           {LINKS.map((link, index) => (
             <React.Fragment key={link.text}>
@@ -48,9 +48,9 @@ const UserSidebar = ({ userId }) => {
                 <ListItemIcon sx={{ color: 'primary.main' }}>
                   {link.icon}
                 </ListItemIcon>
-                <ListItemText primary={link.text} />
+                <ListItemText primary={link.text} primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} />
               </ListItem>
-              {index < LINKS.length - 1 && <Divider component='li' />}
+              {index < LINKS.length - 1 && <Divider component='li' sx={{ borderColor: 'divider' }} />}
             </React.Fragment>
           ))}
         </List>

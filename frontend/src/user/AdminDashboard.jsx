@@ -42,14 +42,13 @@ const AdminDashboard = () => {
 
         {/* MAIN CONTENT */}
         <Grid size={{ xs: 12, md: 9 }}>
-          <Card elevation={3}>
+          <Card elevation={3} sx={{ bgcolor: 'background.paper' }}>
             <CardHeader
               title='Admin Profile'
-              sx={{
-                bgcolor: 'background.paper',
-              }}
+              titleTypographyProps={{ variant: 'h6', fontWeight: 'bold' }}
+              sx={{ color: 'text.primary' }}
             />
-            <Divider />
+            <Divider sx={{ borderColor: 'divider' }} />
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <Avatar
@@ -64,7 +63,7 @@ const AdminDashboard = () => {
                   {name.charAt(0).toUpperCase()}
                 </Avatar>
                 <Box>
-                  <Typography variant='h5' component='div'>
+                  <Typography variant='h5' component='div' className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
                     {name}
                   </Typography>
                   <Chip
@@ -79,17 +78,17 @@ const AdminDashboard = () => {
               <Paper elevation={0} sx={{ bgcolor: 'background.default' }}>
                 <List dense>
                   <ListItem>
-                    <ListItemIcon sx={{ minWidth: 40 }}>
-                      <PersonIcon color='primary' />
+                    <ListItemIcon sx={{ minWidth: 40, color: 'primary.main' }}>
+                      <PersonIcon />
                     </ListItemIcon>
-                    <ListItemText primary='User ID' secondary={_id} />
+                    <ListItemText primary='User ID' secondary={_id} primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} secondaryTypographyProps={{ className: "text-apple-gray-600 dark:text-dark-text-secondary" }} />
                   </ListItem>
-                  <Divider component='li' />
+                  <Divider component='li' sx={{ borderColor: 'divider' }} />
                   <ListItem>
-                    <ListItemIcon sx={{ minWidth: 40 }}>
-                      <EmailIcon color='primary' />
+                    <ListItemIcon sx={{ minWidth: 40, color: 'primary.main' }}>
+                      <EmailIcon />
                     </ListItemIcon>
-                    <ListItemText primary='Email' secondary={email} />
+                    <ListItemText primary='Email' secondary={email} primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} secondaryTypographyProps={{ className: "text-apple-gray-600 dark:text-dark-text-secondary" }} />
                   </ListItem>
                 </List>
               </Paper>

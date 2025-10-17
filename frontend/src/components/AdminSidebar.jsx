@@ -30,13 +30,13 @@ const adminLinks = [
 const AdminSidebar = () => {
   return (
     <Grid size={{ xs: 12, md: 3 }}>
-      <Card elevation={3}>
+      <Card elevation={3} sx={{ bgcolor: 'background.paper' }}>
         <CardHeader
           title='Admin Actions'
           titleTypographyProps={{ variant: 'h6' }}
           sx={{ bgcolor: 'primary.main', color: 'common.white' }}
         />
-        <Divider />
+        <Divider sx={{ borderColor: 'divider' }} />
         <List dense>
           {adminLinks.map((link, index) => (
             <React.Fragment key={link.text}>
@@ -53,9 +53,9 @@ const AdminSidebar = () => {
                 <ListItemIcon sx={{ color: 'primary.main' }}>
                   {link.icon}
                 </ListItemIcon>
-                <ListItemText primary={link.text} />
+                <ListItemText primary={link.text} primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} />
               </ListItem>
-              {index < adminLinks.length - 1 && <Divider component='li' />}
+              {index < adminLinks.length - 1 && <Divider component='li' sx={{ borderColor: 'divider' }} />}
             </React.Fragment>
           ))}
         </List>

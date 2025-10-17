@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-  TextField,
-  Button,
-  Box,
-  Typography,
-  Grid,
-  Paper,
-  Container,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import { getCategories, list } from './apiCore';
+import { motion } from 'framer-motion';
+import { Search as SearchIcon, ChevronDown } from 'lucide-react';
 import Card from './Card';
+import { USE_FAKE_STORE_API } from '../config';
+
+// Import both API services
+import { getCategories as getLocalCategories, list as listLocal } from './apiCore';
+import { getCategories as getFakeStoreCategories, list as listFakeStore } from './fakeStoreApi';
 
 const Search = () => {
   const [data, setData] = useState({
@@ -27,8 +19,12 @@ const Search = () => {
 
   const { categories, category, search, results, searched } = data;
 
+  // Determine which API service to use
+  const getCategoriesService = USE_FAKE_STORE_API ? getFakeStoreCategories : getLocalCategories;
+  const listService = USE_FAKE_STORE_API ? listFakeStore : listLocal;
+
   const loadCategories = () => {
-    getCategories().then((data) => {
+    getCategoriesService().then((data) => {
       if (data.error) {
         console.log(data.error);
       } else {
@@ -43,7 +39,7 @@ const Search = () => {
 
   const searchData = () => {
     if (search) {
-      list({ search: search || undefined, category: category }).then(
+      listService({ search: search || undefined, category: category }).then(
         (response) => {
           if (response.error) {
             console.log(response.error);
@@ -84,95 +80,80 @@ const Search = () => {
 
   const searchedProducts = (results = []) => {
     return (
-      <Box sx={{ mt: 4 }}>
+      <div className="mt-8">
         {searched && (
-          <Typography variant='h5' align='center' gutterBottom>
-            {searchMessage(searched, results)}
-          </Typography>
+          <div className="text-center mb-8">
+            <h3 className="text-xl font-semibold text-apple-gray-900">
+              {searchMessage(searched, results)}
+            </h3>
+          </div>
         )}
-        <Grid container spacing={3}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {results.map((product, i) => (
-            <Grid item key={i} xs={12} sm={6} md={4} lg={3}>
+            <motion.div
+              key={product._id || product.id || i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+            >
               <Card product={product} />
-            </Grid>
+            </motion.div>
           ))}
-        </Grid>
-      </Box>
+        </div>
+      </div>
     );
   };
 
   return (
-    <Container maxWidth='lg' sx={{ py: 4 }}>
-      <Paper
-        component='form'
+    <div className="max-w-4xl mx-auto">
+      <motion.form
         onSubmit={searchSubmit}
-        sx={{
-          p: 3,
-          mb: 4,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          gap: 2,
-          maxWidth: 800,
-          mx: 'auto',
-          boxShadow: 3,
-        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-2xl shadow-sm border border-apple-gray-200 p-6 mb-8"
       >
-        <FormControl sx={{ minWidth: 180 }}>
-          <InputLabel id='category-select-label'>Category</InputLabel>
-          <Select
-            labelId='category-select-label'
-            id='category-select'
-            value={category}
-            onChange={handleChange('category')}
-            label='Category'
-            size='small'
+        <div className="flex flex-col sm:flex-row gap-4 items-center">
+          {/* Category Dropdown */}
+          <div className="relative w-full sm:w-48">
+            <select
+              value={category}
+              onChange={handleChange('category')}
+              className="w-full appearance-none bg-apple-gray-50 border border-apple-gray-200 rounded-xl px-4 py-3 pr-10 text-apple-gray-900 focus:outline-none focus:ring-2 focus:ring-apple-blue-500 focus:border-transparent"
+            >
+              <option value="">All Categories</option>
+              {categories.map((c, i) => (
+                <option key={i} value={c.name || c._id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-apple-gray-400 pointer-events-none" />
+          </div>
+
+          {/* Search Input */}
+          <div className="relative flex-1 w-full">
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-apple-gray-400" />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={handleChange('search')}
+              className="w-full pl-10 pr-4 py-3 bg-apple-gray-50 border border-apple-gray-200 rounded-xl text-apple-gray-900 placeholder-apple-gray-500 focus:outline-none focus:ring-2 focus:ring-apple-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* Search Button */}
+          <button
+            type="submit"
+            className="apple-button-primary w-full sm:w-auto px-8 py-3"
           >
-            <MenuItem value='All'>All Categories</MenuItem>
-            {categories.map((c, i) => (
-              <MenuItem key={i} value={c._id}>
-                {c.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <TextField
-          fullWidth
-          variant='outlined'
-          placeholder='Search products...'
-          value={search}
-          onChange={handleChange('search')}
-          size='small'
-          InputProps={{
-            startAdornment: <SearchIcon color='action' sx={{ mr: 1 }} />,
-          }}
-          sx={{
-            flexGrow: 1,
-            maxWidth: 400,
-          }}
-        />
-
-        <Button
-          variant='contained'
-          type='submit'
-          size='large'
-          sx={{
-            px: 4,
-            height: 40,
-            backgroundColor: 'primary.main',
-            '&:hover': {
-              backgroundColor: 'primary.dark',
-            },
-          }}
-        >
-          Search
-        </Button>
-      </Paper>
+            Search
+          </button>
+        </div>
+      </motion.form>
 
       {searchedProducts(results)}
-    </Container>
+    </div>
   );
 };
 

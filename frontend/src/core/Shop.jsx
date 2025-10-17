@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
 import Button from '@mui/material/Button';
 import Card from './Card.jsx';
-import { getCategories, getFilteredProducts } from './apiCore.js';
-import CategoriesFilter from './CategoriesFilter';
-import PriceRangeFilter from './PriceRangeFilter';
 import { Box, Grid, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles'; // Updated import
+import { styled } from '@mui/material/styles';
 
 import Search from './Search';
 import { prices } from './fixedPrices.js';
 import Copyright from './Copyright';
+import { USE_FAKE_STORE_API } from '../config';
+
+// Import both API services
+import { getCategories as getLocalCategories, getFilteredProducts as getLocalFilteredProducts } from './apiCore.js';
+import { getCategories as getFakeStoreCategories, getFilteredProducts as getFakeStoreFilteredProducts } from './fakeStoreApi.js';
+import CategoriesFilter from './CategoriesFilter';
+import PriceRangeFilter from './PriceRangeFilter';
 
 const GradientButton = styled(Button)(({ theme }) => ({
   background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -37,8 +41,12 @@ const Shop = () => {
   const [size, setSize] = useState(0);
   const [filteredResults, setFilteredResults] = useState([]);
 
+  // Determine which API service to use
+  const getCategoriesService = USE_FAKE_STORE_API ? getFakeStoreCategories : getLocalCategories;
+  const getFilteredProductsService = USE_FAKE_STORE_API ? getFakeStoreFilteredProducts : getLocalFilteredProducts;
+
   const init = () => {
-    getCategories().then((data) => {
+    getCategoriesService().then((data) => {
       if (data.error) {
         setError(data.error);
       } else {
@@ -48,8 +56,7 @@ const Shop = () => {
   };
 
   const loadFilteredResults = (newFilters) => {
-    // console.log(newFilters);
-    getFilteredProducts(skip, limit, newFilters).then((data) => {
+    getFilteredProductsService(skip, limit, newFilters).then((data) => {
       if (data.error) {
         setError(data.error);
       } else {
@@ -62,8 +69,7 @@ const Shop = () => {
 
   const loadMore = () => {
     let toSkip = skip + limit;
-    // console.log(newFilters);
-    getFilteredProducts(toSkip, limit, myFilters.filters).then((data) => {
+    getFilteredProductsService(toSkip, limit, myFilters.filters).then((data) => {
       if (data.error) {
         setError(data.error);
       } else {
@@ -78,9 +84,11 @@ const Shop = () => {
     return (
       size > 0 &&
       size >= limit && (
-        <GradientButton onClick={loadMore} variant='contained'>
-          Load more
-        </GradientButton>
+        <div className="text-center py-8">
+          <GradientButton onClick={loadMore} variant='contained'>
+            Load more
+          </GradientButton>
+        </div>
       )
     );
   };
@@ -91,7 +99,6 @@ const Shop = () => {
   }, []);
 
   const handleFilters = (filters, filterBy) => {
-    // console.log("SHOP", filters, filterBy);
     const newFilters = { ...myFilters };
     newFilters.filters[filterBy] = filters;
 
@@ -124,17 +131,21 @@ const Shop = () => {
       <Search />
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 3 }}>
-          <CategoriesFilter
-            categories={categories}
-            handleFilters={(filters) => handleFilters(filters, 'category')}
-          />
-          <PriceRangeFilter
-            prices={prices}
-            handleFilters={(filters) => handleFilters(filters, 'price')}
-          />
+          <div className="apple-card p-6 mb-6">
+            <CategoriesFilter
+              categories={categories}
+              handleFilters={(filters) => handleFilters(filters, 'category')}
+            />
+          </div>
+          <div className="apple-card p-6">
+            <PriceRangeFilter
+              prices={prices}
+              handleFilters={(filters) => handleFilters(filters, 'price')}
+            />
+          </div>
         </Grid>
         <Grid size={{ xs: 12, md: 9 }}>
-          <Typography variant='h4' gutterBottom>
+          <Typography variant='h4' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
             Products
           </Typography>
           <Box
@@ -155,7 +166,7 @@ const Shop = () => {
               </Grid>
             ))}
           </Box>
-          <hr />
+          <hr className="border-apple-gray-200 dark:border-dark-border" />
           {loadMoreButton()}
         </Grid>
       </Grid>

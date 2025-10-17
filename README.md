@@ -1,97 +1,140 @@
-# mern-ecommerce
+# MERN E-commerce with Fake Store API Integration
 
-> Frontend-> Vite JS (React JS)
+This is a MERN (MongoDB, Express, React, Node.js) e-commerce application that has been enhanced to work with the Fake Store API as an alternative to the local backend.
 
-> Backend-> Node JS & Express JS
+## Features
 
-> Database-> MongoDB
+- Full e-commerce functionality (product listing, product details, shopping cart, search, filtering)
+- Integration with Fake Store API (https://fakestoreapi.com)
+- Toggle between local backend and Fake Store API
+- Responsive design using Material-UI
 
-## Installation process
+## Getting Started
 
-1. #### clone the repo using this command
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
    ```bash
-   git clone https://github.com/ashraf-kabir/mern-ecommerce.git
+   git clone <repository-url>
    ```
-2. #### install npm packages
-   1. install backend packages
-   ```bash
-   cd mern-ecommerce
-   npm install
-   ```
-   2. install frontend packages
+
+2. Install frontend dependencies:
    ```bash
    cd frontend
    npm install
    ```
-3. go to the parent folder of mern-ecommerce & create .env for connection, JWT_SECRET, BRAINTREE_MERCHANT_ID, BRAINTREE_PUBLIC_KEY and BRAINTREE_PRIVATE_KEY.
 
+3. Install backend dependencies:
    ```bash
-   cd mern-ecommerce
-   sudo nano .env
+   cd ..
+   npm install
    ```
 
-   (ctrl+x to save & nano follow instruction there)
+### Running the Application
 
-   ##### sample code for backend .env
-
-   ```env
-   MONGODB_URI=YOUR_MONGODB_URI
-   JWT_SECRET=YOUR_JWT_SECRET
-   BRAINTREE_MERCHANT_ID=YOUR_BRAINTREE_MERCHANT_ID
-   BRAINTREE_PUBLIC_KEY=YOUR_BRAINTREE_PUBLIC_KEY
-   BRAINTREE_PRIVATE_KEY=YOUR_BRAINTREE_PRIVATE_KEY
-   ```
-
-4. Frontend config.js
-
+1. Start the backend server:
    ```bash
-   cd mern-ecommerce/frontend
-   sudo nano config.js
+   node server.js
    ```
 
-   ##### sample code for frontend config.js
-
-   ```javascript
-   export const API = 'http://localhost:5000/api';
-   ```
-
-   ##### Instructions:
-
-   1. for mongodb atlas database creation follow this tutorial->https://www.youtube.com/watch?v=KKyag6t98g8
-   2. you can use any random string as JWTSECRET
-   3. if your backend server is on a different port or domain, update the API URL in config.js accordingly
-   4. #### note: add .env on .gitignore
-   5. for server deployment use secrets directly
-
-5. <b>deploy this project</b> on your local server by using this command
-
+2. Start the frontend development server:
    ```bash
-   cd mern-ecommerce
+   cd frontend
    npm run dev
    ```
 
-   #### note: both backend & frontend server will start at once with the above command.
+The application will be available at `http://localhost:5174` (or another port if 5174 is in use).
 
-6. #### Database Structure: (Schema)
-   1. categories: \_id, name, createdAt, updatedAt;
-   2. orders: \_id, status, products (Array), transaction_id, amount, address, user (Object), createdAt, updatedAt
-   3. products: \_id, photo (Object), sold, name, description, price, category, shipping, quantity, createdAt, updatedAt
-   4. users: \_id, role, history (Array), name, email, salt, hashed_password, createdAt, updatedAt
+## Fake Store API Integration
 
-### App Description:
+This application can use the Fake Store API instead of the local backend for demonstration purposes.
 
-    1. user can view all products
-    2. user can view single product
-    3. user can search products and view products by category and price range
-    4. user can add to cart checkout products using credit card info
-    5. user can register & sign in
-    6. admin can create, edit, update & delete products
-    7. admin can create categories
-    8. admin can view ordered products
-    9. admin can change the status of a product (processing, shipped, delivered, etc.)
-    10. FRONTEND URL: http://localhost:5173/
-    11. Project demo will be added soon...
+### Configuration
 
+To toggle between the local backend and Fake Store API, modify the `USE_FAKE_STORE_API` flag in `frontend/src/config.js`:
 
-1. <b>Deployed on: (No longer available due to heroku free dyno plan has deprecated)</br> https://ecommerce-ak.herokuapp.com/
-2. raise a star to support me
+```javascript
+// To use Fake Store API
+export const USE_FAKE_STORE_API = true;
+
+// To use local backend
+export const USE_FAKE_STORE_API = false;
+```
+
+### How It Works
+
+When `USE_FAKE_STORE_API` is set to `true`:
+- Product data is fetched from https://fakestoreapi.com
+- All product-related operations use the Fake Store API
+- Payment and order functionalities are simulated (not fully implemented)
+
+When `USE_FAKE_STORE_API` is set to `false`:
+- Product data is fetched from the local backend
+- All functionalities work as originally implemented
+
+## Project Structure
+
+```
+.
+├── controllers/          # Backend controllers
+├── frontend/             # React frontend
+│   ├── src/
+│   │   ├── admin/        # Admin components
+│   │   ├── auth/         # Authentication components
+│   │   ├── components/   # Shared components
+│   │   ├── context/      # React context
+│   │   ├── core/         # Core components and API services
+│   │   ├── user/         # User components
+│   │   ├── App.jsx       # Main App component
+│   │   ├── Routes.jsx    # Routing configuration
+│   │   └── config.js     # Configuration file
+├── helpers/              # Helper functions
+├── models/               # MongoDB models
+├── routes/               # Backend routes
+├── validator/            # Validation functions
+├── package.json          # Backend package.json
+├── server.js             # Backend entry point
+└── README.md             # This file
+```
+
+## API Services
+
+### Local Backend API (`apiCore.js`)
+
+The original API service that connects to the local backend.
+
+### Fake Store API (`fakeStoreApi.js`)
+
+A new API service that connects to https://fakestoreapi.com with the following endpoints:
+
+- `getProducts(sortBy)`: Get products sorted by specified criteria
+- `getCategories()`: Get all product categories
+- `getFilteredProducts(skip, limit, filters)`: Get filtered products with pagination
+- `list(params)`: Search products
+- `read(productId)`: Get a single product by ID
+- `listRelated(productId)`: Get related products
+
+## Components Updated for Fake Store API
+
+The following components have been updated to work with both the local backend and Fake Store API:
+
+- `Home.jsx`: Product listings (new arrivals, best sellers)
+- `Shop.jsx`: Product browsing with filtering
+- `Product.jsx`: Product details page
+- `Card.jsx`: Product card component
+- `ShowImage.jsx`: Product image display
+- `Search.jsx`: Product search functionality
+- `CategoriesFilter.jsx`: Category filtering
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.

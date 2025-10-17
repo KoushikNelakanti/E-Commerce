@@ -26,10 +26,10 @@ const Cart = () => {
 
   const showItems = (items) => (
     <Stack spacing={3}>
-      <Typography variant='h5' textAlign='center' gutterBottom>
+      <Typography variant='h5' textAlign='center' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
         Your Cart ({items.length} {items.length === 1 ? 'Item' : 'Items'})
       </Typography>
-      <Divider />
+      <Divider className="border-apple-gray-200 dark:border-dark-border" />
       {items.map((product, i) => (
         <Box key={i}>
           <Card
@@ -47,7 +47,7 @@ const Cart = () => {
 
   const noItemsMessage = () => (
     <Box textAlign='center' py={4}>
-      <Typography variant='h5' gutterBottom>
+      <Typography variant='h5' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
         Your cart is empty
       </Typography>
       <Button
@@ -72,7 +72,7 @@ const Cart = () => {
         <Grid container spacing={2}>
           {/* Cart Items */}
           <Grid size={{ xs: 12, md: 3 }}>
-            <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
+            <Paper elevation={2} sx={{ p: 3, height: '100%', bgcolor: 'background.paper' }}>
               {showItems(items)}
             </Paper>
           </Grid>
@@ -81,19 +81,19 @@ const Cart = () => {
           <Grid size={{ xs: 12, md: 9 }}>
             <Paper
               elevation={2}
-              sx={{ p: 3, position: { md: 'sticky' }, top: { md: 16 } }}
+              sx={{ p: 3, position: { md: 'sticky' }, top: { md: 16 }, bgcolor: 'background.paper' }}
             >
-              <Typography variant='h5' textAlign='center' gutterBottom>
+              <Typography variant='h5' textAlign='center' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
                 Order Summary
               </Typography>
-              <Divider sx={{ my: 2 }} />
+              <Divider sx={{ my: 2 }} className="border-apple-gray-200 dark:border-dark-border" />
               <Checkout products={items} setRun={setRun} run={run} />
             </Paper>
           </Grid>
         </Grid>
       ) : (
         <Box sx={{ maxWidth: 600, mx: 'auto' }}>
-          <Paper elevation={2} sx={{ p: 4 }}>
+          <Paper elevation={2} sx={{ p: 4, bgcolor: 'background.paper' }}>
             {noItemsMessage()}
           </Paper>
         </Box>

@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from './Layout';
-import { read, listRelated } from './apiCore';
 import Card from './Card';
+import { USE_FAKE_STORE_API } from '../config';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
+
+// Import both API services
+import { read as readLocal, listRelated as listLocalRelated } from './apiCore';
+import { read as readFakeStore, listRelated as listFakeStoreRelated } from './fakeStoreApi';
 
 const Product = () => {
   const [product, setProduct] = useState(null);
@@ -16,14 +20,18 @@ const Product = () => {
 
   const { productId } = useParams();
 
+  // Determine which API service to use
+  const readService = USE_FAKE_STORE_API ? readFakeStore : readLocal;
+  const listRelatedService = USE_FAKE_STORE_API ? listFakeStoreRelated : listLocalRelated;
+
   const loadSingleProduct = (productId) => {
-    read(productId).then((data) => {
+    readService(productId).then((data) => {
       if (data.error) {
         setError(data.error);
       } else {
         setProduct(data);
         setError('');
-        listRelated(data._id).then((relatedData) => {
+        listRelatedService(data._id || data.id).then((relatedData) => {
           if (relatedData.error) {
             setError(relatedData.error);
           } else {
@@ -40,7 +48,7 @@ const Product = () => {
 
   return (
     <Layout
-      title={product?.name || 'Product'}
+      title={product?.name || product?.title || 'Product'}
       description={product?.description?.substring(0, 100) || ''}
       className='container-fluid'
     >
@@ -53,18 +61,18 @@ const Product = () => {
 
         <Grid container spacing={4} justifyContent='center'>
           <Grid item xs={12} md={5}>
-            <Typography variant='h4' gutterBottom>
+            <Typography variant='h4' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
               Product Details
             </Typography>
             {product ? (
               <Card product={product} showViewProductButton={false} />
             ) : (
-              <Typography>Loading product...</Typography>
+              <Typography className="text-apple-gray-600 dark:text-dark-text-secondary transition-colors duration-300">Loading product...</Typography>
             )}
           </Grid>
 
           <Grid item xs={12} md={7}>
-            <Typography variant='h5' gutterBottom>
+            <Typography variant='h5' gutterBottom className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
               Related Products
             </Typography>
 
@@ -84,7 +92,7 @@ const Product = () => {
                   <Card key={i} product={product} />
                 ))
               ) : (
-                <Typography>No related products found.</Typography>
+                <Typography className="text-apple-gray-600 dark:text-dark-text-secondary transition-colors duration-300">No related products found.</Typography>
               )}
             </Box>
           </Grid>

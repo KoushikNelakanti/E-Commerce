@@ -10,7 +10,11 @@ const CategoriesFilter = ({ categories, handleFilters }) => {
   const [checked, setChecked] = useState([]);
 
   const handleToggle = (categoryId) => {
-    const currentIndex = checked.indexOf(categoryId);
+    // Handle both local API (_id) and Fake Store API (name) category identifiers
+    const categoryIdValue = typeof categoryId === 'object' ? categoryId._id || categoryId.name : categoryId;
+    const currentIndex = checked.findIndex(item => 
+      typeof item === 'object' ? (item._id === categoryIdValue || item.name === categoryIdValue) : item === categoryIdValue
+    );
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
@@ -20,7 +24,11 @@ const CategoriesFilter = ({ categories, handleFilters }) => {
     }
 
     setChecked(newChecked);
-    handleFilters(newChecked);
+    // Pass the category names for Fake Store API or IDs for local API
+    const filterValues = newChecked.map(item => 
+      typeof item === 'object' ? (item.name || item._id) : item
+    );
+    handleFilters(filterValues);
   };
 
   return (
@@ -31,16 +39,20 @@ const CategoriesFilter = ({ categories, handleFilters }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {categories.map((category) => (
           <FormControlLabel
-            key={category._id}
+            key={category._id || category}
             control={
               <Checkbox
-                checked={checked.includes(category._id)}
-                onChange={() => handleToggle(category._id)}
+                checked={checked.some(item => 
+                  typeof item === 'object' ? 
+                    (item._id === category._id || item.name === category.name) : 
+                    (item === category._id || item === category.name || item === category)
+                )}
+                onChange={() => handleToggle(category)}
                 color='primary'
                 size='small'
               />
             }
-            label={category.name}
+            label={category.name || category}
             sx={{
               '&:hover': { backgroundColor: 'action.hover', borderRadius: 1 },
               p: 0.5,

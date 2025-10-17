@@ -48,31 +48,33 @@ const Dashboard = () => {
   }, [_id, token]);
 
   const UserLinksCard = () => (
-    <Card elevation={4} sx={{ borderRadius: 3 }}>
+    <Card elevation={4} sx={{ borderRadius: 3, bgcolor: 'background.paper' }}>
       <CardHeader
         title='User Actions'
         titleTypographyProps={{ variant: 'h6', fontWeight: 'bold' }}
+        sx={{ color: 'text.primary' }}
       />
-      <Divider />
+      <Divider sx={{ borderColor: 'divider' }} />
       <List>
         <ListItem button component={Link} to='/cart'>
-          <ListItemText primary='My Cart' />
+          <ListItemText primary='My Cart' primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} />
         </ListItem>
-        <Divider component='li' />
+        <Divider component='li' sx={{ borderColor: 'divider' }} />
         <ListItem button component={Link} to={`/profile/${_id}`}>
-          <ListItemText primary='Update Profile' />
+          <ListItemText primary='Update Profile' primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} />
         </ListItem>
       </List>
     </Card>
   );
 
   const UserInfoCard = () => (
-    <Card elevation={4} sx={{ borderRadius: 3, mb: 3 }}>
+    <Card elevation={4} sx={{ borderRadius: 3, mb: 3, bgcolor: 'background.paper' }}>
       <CardHeader
         title='User Information'
         titleTypographyProps={{ variant: 'h6', fontWeight: 'bold' }}
+        sx={{ color: 'text.primary' }}
       />
-      <Divider />
+      <Divider sx={{ borderColor: 'divider' }} />
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Avatar
@@ -86,13 +88,13 @@ const Dashboard = () => {
           >
             {name.charAt(0).toUpperCase()}
           </Avatar>
-          <Typography variant='h6'>{name}</Typography>
+          <Typography variant='h6' className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">{name}</Typography>
         </Box>
         <List>
           <ListItem>
-            <ListItemText primary='Email' secondary={email} />
+            <ListItemText primary='Email' secondary={email} primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} secondaryTypographyProps={{ className: "text-apple-gray-600 dark:text-dark-text-secondary" }} />
           </ListItem>
-          <Divider component='li' />
+          <Divider component='li' sx={{ borderColor: 'divider' }} />
           <ListItem>
             <ListItemText
               primary='Role'
@@ -103,6 +105,7 @@ const Dashboard = () => {
                   size='small'
                 />
               }
+              primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }}
             />
           </ListItem>
         </List>
@@ -111,17 +114,18 @@ const Dashboard = () => {
   );
 
   const PurchaseHistoryCard = () => (
-    <Card elevation={4} sx={{ borderRadius: 3 }}>
+    <Card elevation={4} sx={{ borderRadius: 3, bgcolor: 'background.paper' }}>
       <CardHeader
         title='Purchase History'
         titleTypographyProps={{ variant: 'h6', fontWeight: 'bold' }}
+        sx={{ color: 'text.primary' }}
       />
-      <Divider />
+      <Divider sx={{ borderColor: 'divider' }} />
       <CardContent>
         {loading ? (
-          <Typography>Loading history...</Typography>
+          <Typography className="text-apple-gray-600 dark:text-dark-text-secondary transition-colors duration-300">Loading history...</Typography>
         ) : history.length === 0 ? (
-          <Typography>No purchase history found</Typography>
+          <Typography className="text-apple-gray-600 dark:text-dark-text-secondary transition-colors duration-300">No purchase history found</Typography>
         ) : (
           <List>
             {history.map((h, i) => (
@@ -136,14 +140,15 @@ const Dashboard = () => {
                       borderRadius: 2,
                       transition: 'transform 0.2s',
                       '&:hover': { transform: 'scale(1.01)' },
+                      bgcolor: 'background.paper'
                     }}
                   >
                     <Grid container spacing={2} alignItems='center'>
                       <Grid item xs={12} sm={6}>
-                        <Typography variant='subtitle1' fontWeight='bold'>
+                        <Typography variant='subtitle1' fontWeight='bold' className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
                           {p.name}
                         </Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography variant='body2' className="text-apple-gray-600 dark:text-dark-text-secondary transition-colors duration-300">
                           ${p.price.toFixed(2)}
                         </Typography>
                       </Grid>
@@ -153,7 +158,7 @@ const Dashboard = () => {
                         sm={6}
                         sx={{ textAlign: { xs: 'left', sm: 'right' } }}
                       >
-                        <Typography variant='caption' color='text.secondary'>
+                        <Typography variant='caption' className="text-apple-gray-500 dark:text-dark-text-tertiary transition-colors duration-300">
                           Purchased {moment(p.createdAt).fromNow()}
                         </Typography>
                       </Grid>

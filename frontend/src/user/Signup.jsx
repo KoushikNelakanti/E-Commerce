@@ -6,7 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Alert from '@mui/material/Alert';
@@ -14,10 +14,11 @@ import { styled } from '@mui/material/styles';
 import Copyright from '../core/Copyright.jsx';
 import Layout from '../core/Layout.jsx';
 import { signup } from '../auth/index.js';
+import { useAppTheme } from '../hooks/useTheme';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   margin: theme.spacing(1),
-  backgroundColor: theme.palette.secondary.main,
+  backgroundColor: theme.palette.primary.main,
 }));
 
 const FormContainer = styled('form')(({ theme }) => ({
@@ -28,9 +29,21 @@ const FormContainer = styled('form')(({ theme }) => ({
 const SubmitButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(3, 0, 2),
   padding: theme.spacing(1.5),
+  borderRadius: '9999px',
+  fontWeight: 600,
+  textTransform: 'none',
+}));
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.primary.main,
+  '&:hover': {
+    textDecoration: 'underline',
+  },
 }));
 
 export default function Signup() {
+  const theme = useAppTheme();
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -73,23 +86,39 @@ export default function Signup() {
 
   const showError = () =>
     error && (
-      <Alert severity='error' sx={{ width: '100%', mb: 2 }}>
+      <Alert 
+        severity='error' 
+        sx={{ 
+          width: '100%', 
+          mb: 2,
+          borderRadius: '12px',
+          bgcolor: theme.palette.mode === 'dark' ? 'rgba(255, 69, 58, 0.1)' : 'rgba(255, 69, 58, 0.05)',
+        }}
+      >
         {error}
       </Alert>
     );
 
   const showSuccess = () =>
     success && (
-      <Alert severity='success' sx={{ width: '100%', mb: 2 }}>
+      <Alert 
+        severity='success' 
+        sx={{ 
+          width: '100%', 
+          mb: 2,
+          borderRadius: '12px',
+          bgcolor: theme.palette.mode === 'dark' ? 'rgba(48, 209, 88, 0.1)' : 'rgba(48, 209, 88, 0.05)',
+        }}
+      >
         New account created successfully! Please{' '}
-        <Link to='/signin'>Sign In</Link>.
+        <StyledLink to='/signin'>Sign In</StyledLink>.
       </Alert>
     );
 
   return (
     <Layout
-      title='Signup page'
-      description='Signup to MERN E-commerce App'
+      title='Create Account'
+      description='Sign up for a new account'
       className='container col-md-8 offset-md-2'
     >
       <Container component='main' maxWidth='xs'>
@@ -100,17 +129,42 @@ export default function Signup() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            padding: 3,
+            borderRadius: '16px',
+            boxShadow: theme.palette.mode === 'dark' 
+              ? '0 10px 25px -3px rgba(0, 0, 0, 0.4)' 
+              : '0 10px 25px -3px rgba(0, 0, 0, 0.1)',
+            bgcolor: theme.palette.background.paper,
           }}
         >
           {showSuccess()}
           {showError()}
 
           <StyledAvatar>
-            <LockOutlinedIcon />
+            <PersonAddIcon />
           </StyledAvatar>
 
-          <Typography component='h1' variant='h5'>
+          <Typography 
+            component='h1' 
+            variant='h5'
+            sx={{ 
+              fontWeight: 600,
+              color: theme.palette.text.primary,
+            }}
+          >
             Create Account
+          </Typography>
+          
+          <Typography 
+            variant='body2' 
+            sx={{ 
+              mt: 1, 
+              mb: 3,
+              color: theme.palette.text.secondary,
+              textAlign: 'center',
+            }}
+          >
+            Join us today and start shopping
           </Typography>
 
           <FormContainer onSubmit={clickSubmit} noValidate>
@@ -125,7 +179,11 @@ export default function Signup() {
               autoFocus
               value={name}
               onChange={handleChange('name')}
-              sx={{ mb: 2 }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                },
+              }}
             />
 
             <TextField
@@ -138,7 +196,11 @@ export default function Signup() {
               autoComplete='email'
               value={email}
               onChange={handleChange('email')}
-              sx={{ mb: 2 }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                },
+              }}
             />
 
             <TextField
@@ -153,7 +215,12 @@ export default function Signup() {
               value={password}
               onChange={handleChange('password')}
               inputProps={{ minLength: 6 }}
-              sx={{ mb: 2 }}
+              helperText='Password must be at least 6 characters'
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                },
+              }}
             />
 
             <SubmitButton
@@ -165,10 +232,10 @@ export default function Signup() {
               {loading ? 'Creating Account...' : 'Sign Up'}
             </SubmitButton>
 
-            <Grid container justifyContent='flex-end'>
+            <Grid container justifyContent='flex-end' sx={{ mt: 2 }}>
               <Grid item>
                 <Typography variant='body2'>
-                  Already have an account? <Link to='/signin'>Sign in</Link>
+                  Already have an account? <StyledLink to='/signin'>Sign in</StyledLink>
                 </Typography>
               </Grid>
             </Grid>

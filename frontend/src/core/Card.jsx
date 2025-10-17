@@ -2,29 +2,48 @@ import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import ShowImage from './ShowImage';
 import moment from 'moment';
-
-// MUI v5 imports
-import Button from '@mui/material/Button';
-import CardM from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import DeleteIcon from '@mui/icons-material/Delete';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { motion } from 'framer-motion';
+import { 
+  ShoppingBag, 
+  Eye, 
+  Trash2, 
+  Plus, 
+  Minus,
+  Check,
+  X
+} from 'lucide-react';
 
 import { addItem, updateItem, removeItem } from './cartHelpers';
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
-});
+// Custom notification component
+const Notification = ({ message, isVisible, onClose, type = 'success' }) => {
+  if (!isVisible) return null;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 50, scale: 0.9 }}
+      className={`fixed bottom-4 right-4 z-50 p-4 rounded-2xl shadow-lg backdrop-blur-sm ${
+        type === 'success' 
+          ? 'bg-green-500/90 text-white' 
+          : 'bg-red-500/90 text-white'
+      }`}
+    >
+      <div className="flex items-center space-x-2">
+        {type === 'success' ? (
+          <Check className="h-5 w-5" />
+        ) : (
+          <X className="h-5 w-5" />
+        )}
+        <span className="font-medium">{message}</span>
+        <button onClick={onClose} className="ml-2 hover:opacity-70">
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+    </motion.div>
+  );
+};
 
 const Card = ({
   product,
@@ -36,38 +55,26 @@ const Card = ({
   run = undefined,
 }) => {
   const [redirect, setRedirect] = useState(false);
-  const [count, setCount] = useState(product.count);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [count, setCount] = useState(product.count || 1);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [isHovered, setIsHovered] = useState(false);
 
-  const showViewButton = (showViewProductButton) => {
-    return (
-      showViewProductButton && (
-        <Button
-          href={`/product/${product._id}`}
-          variant='contained'
-          color='primary'
-          sx={{ mr: 1 }}
-        >
-          View Product
-        </Button>
-      )
-    );
-  };
+  // Handle different product data structures (local vs Fake Store API)
+  const productName = product.name || product.title || 'Product';
+  const productDescription = product.description || 'No description available';
+  const productPrice = product.price || 0;
+  const productQuantity = product.quantity || product.rating?.count || 10;
+  const productCategory = product.category?.name || product.category || 'Uncategorized';
+  const productCreatedAt = product.createdAt || new Date().toISOString();
 
   const addToCart = () => {
     addItem(product, () => {
-      setSnackbarMessage(`${product.name} added to cart!`);
-      setOpenSnackbar(true);
-      setRun(!run); // This will trigger parent components to update
+      setNotificationMessage(`${productName} added to cart!`);
+      setShowNotification(true);
+      setRun(!run);
+      setTimeout(() => setShowNotification(false), 3000);
     });
-  };
-
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSnackbar(false);
   };
 
   const shouldRedirect = (redirect) => {
@@ -76,172 +83,148 @@ const Card = ({
     }
   };
 
-  const showAddToCartBtn = (showAddToCartButton) => {
-    return (
-      showAddToCartButton && (
-        <Button
-          onClick={addToCart}
-          variant='outlined'
-          color='secondary'
-          startIcon={<ShoppingCartIcon />}
-          disabled={product.quantity < 1}
-        >
-          Add to cart
-        </Button>
-      )
-    );
-  };
-
-  const showStock = (quantity) => {
-    return quantity > 0 ? (
-      <Chip label='In Stock' color='success' size='small' sx={{ mb: 1 }} />
-    ) : (
-      <Chip label='Out of Stock' color='error' size='small' sx={{ mb: 1 }} />
-    );
-  };
-
-  const handleChange = (productId) => (event) => {
+  const handleQuantityChange = (newCount) => {
+    const validCount = Math.max(1, Math.min(newCount, productQuantity));
+    setCount(validCount);
+    updateItem(product._id || product.id, validCount);
     setRun(!run);
-    setCount(event.target.value < 1 ? 1 : event.target.value);
-    if (event.target.value >= 1) {
-      updateItem(productId, event.target.value);
-      setSnackbarMessage('Quantity updated!');
-      setOpenSnackbar(true);
-    }
+    setNotificationMessage('Quantity updated!');
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 2000);
   };
 
-  const showCartUpdateOptions = (cartUpdate) => {
-    return (
-      cartUpdate && (
-        <Box sx={{ mt: 2 }}>
-          <FormControl fullWidth>
-            <InputLabel>Adjust Quantity</InputLabel>
-            <TextField
-              type='number'
-              variant='outlined'
-              value={count}
-              onChange={handleChange(product._id)}
-              sx={{ mt: 1 }}
-              inputProps={{ min: 1, max: product.quantity }}
-            />
-          </FormControl>
-        </Box>
-      )
-    );
-  };
-
-  const showRemoveButton = (showRemoveProductButton) => {
-    return (
-      showRemoveProductButton && (
-        <Button
-          onClick={() => {
-            removeItem(product._id);
-            setRun(!run);
-            setSnackbarMessage(`${product.name} removed from cart!`);
-            setOpenSnackbar(true);
-          }}
-          variant='contained'
-          color='error'
-          startIcon={<DeleteIcon />}
-          sx={{ mt: 1, width: '100%' }}
-        >
-          Remove Product
-        </Button>
-      )
-    );
+  const handleRemove = () => {
+    removeItem(product._id || product.id);
+    setRun(!run);
+    setNotificationMessage(`${productName} removed from cart!`);
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 3000);
   };
 
   return (
     <>
-      <CardM
-        sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          transition: 'transform 0.3s',
-          '&:hover': {
-            transform: 'scale(1.02)',
-            boxShadow: 3,
-          },
-        }}
+      {shouldRedirect(redirect)}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="apple-card group cursor-pointer h-full flex flex-col overflow-hidden"
       >
-        {shouldRedirect(redirect)}
-        <ShowImage item={product} url='product' />
-        <CardContent sx={{ flexGrow: 1 }}>
-          <Typography gutterBottom variant='h6' component='h2' noWrap>
-            {product.name}
-          </Typography>
-
-          <Typography
-            variant='body2'
-            color='text.secondary'
-            sx={{
-              mb: 2,
-              display: '-webkit-box',
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-            }}
+        {/* Product Image */}
+        <div className="relative overflow-hidden bg-apple-gray-50 dark:bg-dark-surface-secondary aspect-square">
+          <ShowImage item={product} url='product' />
+          
+          {/* Hover overlay with actions */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isHovered ? 1 : 0 }}
+            className="absolute inset-0 bg-black/20 dark:bg-black/30 flex items-center justify-center space-x-3"
           >
-            {product.description}
-          </Typography>
+            {showViewProductButton && (
+              <motion.a
+                href={`/product/${product._id || product.id}`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="apple-button-secondary flex items-center space-x-2"
+              >
+                <Eye className="h-4 w-4" />
+                <span>View</span>
+              </motion.a>
+            )}
+            
+            {showAddToCartButton && productQuantity > 0 && (
+              <motion.button
+                onClick={addToCart}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="apple-button-primary flex items-center space-x-2"
+              >
+                <ShoppingBag className="h-4 w-4" />
+                <span>Add to Cart</span>
+              </motion.button>
+            )}
+          </motion.div>
+        </div>
 
-          <Stack direction='row' spacing={1} sx={{ mb: 1 }}>
-            <Typography variant='body1' fontWeight='bold'>
-              ${product.price}
-            </Typography>
-            {showStock(product.quantity)}
-          </Stack>
+        {/* Product Info */}
+        <div className="p-6 flex-1 flex flex-col">
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-lg font-semibold text-apple-gray-900 dark:text-dark-text-primary line-clamp-2 flex-1 transition-colors duration-300">
+              {productName}
+            </h3>
+            <div className={`ml-2 px-2 py-1 rounded-full text-xs font-medium transition-colors duration-300 ${
+              productQuantity > 0 
+                ? 'bg-green-100 dark:bg-dark-green/20 text-green-800 dark:text-dark-green' 
+                : 'bg-red-100 dark:bg-dark-red/20 text-red-800 dark:text-dark-red'
+            }`}>
+              {productQuantity > 0 ? 'In Stock' : 'Out of Stock'}
+            </div>
+          </div>
 
-          <Typography
-            variant='caption'
-            color='text.secondary'
-            display='block'
-            sx={{ mb: 1 }}
-          >
-            Category: {product.category?.name}
-          </Typography>
+          <p className="text-apple-gray-600 dark:text-dark-text-tertiary text-sm mb-4 line-clamp-3 flex-1 transition-colors duration-300">
+            {productDescription}
+          </p>
 
-          <Typography
-            variant='caption'
-            color='text.secondary'
-            display='block'
-            sx={{ mb: 2 }}
-          >
-            Added {moment(product.createdAt).fromNow()}
-          </Typography>
+          <div className="space-y-3 mt-auto">
+            <div className="flex items-center justify-between">
+              <span className="text-2xl font-bold text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
+                ${productPrice}
+              </span>
+              <span className="text-sm text-apple-gray-500 dark:text-dark-text-tertiary transition-colors duration-300">
+                {productCategory}
+              </span>
+            </div>
 
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 1,
-              mt: 'auto',
-            }}
-          >
-            {showViewButton(showViewProductButton)}
-            {showAddToCartBtn(showAddToCartButton)}
-          </Box>
+            {/* Cart Update Options */}
+            {cartUpdate && (
+              <div className="flex items-center justify-between p-3 bg-apple-gray-50 dark:bg-dark-surface-secondary rounded-xl transition-colors duration-300">
+                <span className="text-sm font-medium text-apple-gray-700 dark:text-dark-text-secondary transition-colors duration-300">Quantity:</span>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => handleQuantityChange(count - 1)}
+                    disabled={count <= 1}
+                    className="p-1 rounded-full hover:bg-apple-gray-200 dark:hover:bg-dark-surface-tertiary disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+                  >
+                    <Minus className="h-4 w-4 text-apple-gray-600 dark:text-dark-text-secondary" />
+                  </button>
+                  <span className="w-8 text-center font-medium text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">{count}</span>
+                  <button
+                    onClick={() => handleQuantityChange(count + 1)}
+                    disabled={count >= productQuantity}
+                    className="p-1 rounded-full hover:bg-apple-gray-200 dark:hover:bg-dark-surface-tertiary disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+                  >
+                    <Plus className="h-4 w-4 text-apple-gray-600 dark:text-dark-text-secondary" />
+                  </button>
+                </div>
+              </div>
+            )}
 
-          {showCartUpdateOptions(cartUpdate)}
-          {showRemoveButton(showRemoveProductButton)}
-        </CardContent>
-      </CardM>
+            {/* Remove Button */}
+            {showRemoveProductButton && (
+              <button
+                onClick={handleRemove}
+                className="w-full flex items-center justify-center space-x-2 py-3 text-red-600 dark:text-dark-red hover:bg-red-50 dark:hover:bg-dark-red/10 rounded-xl transition-colors duration-300"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span>Remove from Cart</span>
+              </button>
+            )}
 
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity='success'
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+            <div className="text-xs text-apple-gray-500 dark:text-dark-text-quaternary text-center transition-colors duration-300">
+              Added {moment(productCreatedAt).fromNow()}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Custom Notification */}
+      <Notification
+        message={notificationMessage}
+        isVisible={showNotification}
+        onClose={() => setShowNotification(false)}
+      />
     </>
   );
 };
