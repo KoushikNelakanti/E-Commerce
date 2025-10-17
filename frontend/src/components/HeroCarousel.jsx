@@ -184,7 +184,7 @@ const HeroCarousel = () => {
               transition={{ duration: 0.6, ease: 'easeInOut' }}
               className="absolute inset-0"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/40 via-white/10 to-transparent dark:from-dark-bg/60 dark:via-dark-bg/20 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/40 via-white/10 to-transparent dark:from-gray-900/60 dark:via-gray-900/20 pointer-events-none" />
               <img
                 src={slide.image}
                 alt={slide.title}

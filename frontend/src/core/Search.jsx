@@ -132,13 +132,13 @@ const Search = () => {
 
           {/* Search Input */}
           <div className="relative flex-grow">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-apple-gray-400 dark:text-dark-text-tertiary" />
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
             <input
               type="search"
               value={data.search}
               onChange={handleChange('search')}
               placeholder="Search products..."
-              className="w-full pl-10 pr-4 py-3 bg-apple-gray-50 dark:bg-dark-surface-secondary border border-apple-gray-200 dark:border-dark-border rounded-xl text-apple-gray-900 dark:text-dark-text-primary placeholder-apple-gray-500 dark:placeholder-dark-text-tertiary focus:outline-none focus:ring-2 focus:ring-apple-blue-500 dark:focus:ring-dark-blue-500 focus:border-transparent transition-colors duration-300"
+              className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors duration-300"
             />
           </div>
 
