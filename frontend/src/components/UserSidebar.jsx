@@ -48,7 +48,7 @@ const UserSidebar = ({ userId }) => {
                 <ListItemIcon sx={{ color: 'primary.main' }}>
                   {link.icon}
                 </ListItemIcon>
-                <ListItemText primary={link.text} primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} />
+                <ListItemText primary={link.text} primaryTypographyProps={{ className: "text-gray-900 dark:text-white" }} />
               </ListItem>
               {index < LINKS.length - 1 && <Divider component='li' sx={{ borderColor: 'divider' }} />}
             </React.Fragment>

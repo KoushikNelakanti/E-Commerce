@@ -63,7 +63,7 @@ const AdminDashboard = () => {
                   {name.charAt(0).toUpperCase()}
                 </Avatar>
                 <Box>
-                  <Typography variant='h5' component='div' className="text-apple-gray-900 dark:text-dark-text-primary transition-colors duration-300">
+                  <Typography variant='h5' component='div' className="text-gray-900 dark:text-white transition-colors duration-300">
                     {name}
                   </Typography>
                   <Chip
@@ -81,14 +81,14 @@ const AdminDashboard = () => {
                     <ListItemIcon sx={{ minWidth: 40, color: 'primary.main' }}>
                       <PersonIcon />
                     </ListItemIcon>
-                    <ListItemText primary='User ID' secondary={_id} primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} secondaryTypographyProps={{ className: "text-apple-gray-600 dark:text-dark-text-secondary" }} />
+                    <ListItemText primary='User ID' secondary={_id} primaryTypographyProps={{ className: "text-gray-900 dark:text-white" }} secondaryTypographyProps={{ className: "text-gray-600 dark:text-gray-300" }} />
                   </ListItem>
                   <Divider component='li' sx={{ borderColor: 'divider' }} />
                   <ListItem>
                     <ListItemIcon sx={{ minWidth: 40, color: 'primary.main' }}>
                       <EmailIcon />
                     </ListItemIcon>
-                    <ListItemText primary='Email' secondary={email} primaryTypographyProps={{ className: "text-apple-gray-900 dark:text-dark-text-primary" }} secondaryTypographyProps={{ className: "text-apple-gray-600 dark:text-dark-text-secondary" }} />
+                    <ListItemText primary='Email' secondary={email} primaryTypographyProps={{ className: "text-gray-900 dark:text-white" }} secondaryTypographyProps={{ className: "text-gray-600 dark:text-gray-300" }} />
                   </ListItem>
                 </List>
               </Paper>
