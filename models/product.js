@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
-      maxlength: 32,
+      maxlength: 100,
     },
     description: {
       type: String,
@@ -39,6 +39,43 @@ const productSchema = new mongoose.Schema(
     shipping: {
       required: false,
       type: Boolean,
+    },
+    seller: {
+      type: ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    originalPrice: {
+      type: Number,
+      trim: true,
+    },
+    priceHistory: [{
+      price: {
+        type: Number,
+        required: true,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    }],
+    stockHistory: [{
+      quantity: {
+        type: Number,
+        required: true,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    }],
+    fakeStoreId: {
+      type: Number,
+      unique: true,
+      sparse: true, // Allows null values and only enforces uniqueness for non-null values
+    },
+    imageUrl: {
+      type: String, // For external image URLs (Fake Store API)
     },
   },
   { timestamps: true }

@@ -5,6 +5,7 @@ import Home from './core/Home';
 import PrivateRoute from './auth/PrivateRoute';
 import Dashboard from './user/UserDashboard';
 import AdminRoute from './auth/AdminRoute';
+import SellerRoute from './auth/SellerRoute';
 import AdminDashboard from './user/AdminDashboard';
 import AddCategory from './admin/AddCategory';
 import AddProduct from './admin/AddProduct';
@@ -18,6 +19,12 @@ import UpdateProduct from './admin/UpdateProduct';
 import CategoryList from './admin/CategoryList';
 import UsersList from './admin/UsersList';
 import NotFound from './core/NotFound';
+import ForgotPassword from './auth/ForgotPassword';
+import ResetPassword from './auth/ResetPassword';
+import AlertManagement from './alerts/AlertManagement';
+import SellerDashboard from './seller/SellerDashboard';
+import SellerAddProduct from './seller/AddProduct';
+import EnhancedAdminDashboard from './admin/EnhancedAdminDashboard';
 
 const AppRoutes = () => {
   return (
@@ -27,6 +34,8 @@ const AppRoutes = () => {
         <Route path='/shop' element={<Shop />} />
         <Route path='/signin' element={<Signin />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
         <Route path='/product/:productId' element={<Product />} />
         <Route path='/cart' element={<Cart />} />
 
@@ -47,13 +56,37 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
+        <Route
+          path='/user/alerts'
+          element={
+            <PrivateRoute>
+              <AlertManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/seller/dashboard'
+          element={
+            <SellerRoute>
+              <SellerDashboard />
+            </SellerRoute>
+          }
+        />
+        <Route
+          path='/seller/add-product'
+          element={
+            <SellerRoute>
+              <SellerAddProduct />
+            </SellerRoute>
+          }
+        />
 
         {/* Admin Routes */}
         <Route
           path='/admin/dashboard'
           element={
             <AdminRoute>
-              <AdminDashboard />
+              <EnhancedAdminDashboard />
             </AdminRoute>
           }
         />

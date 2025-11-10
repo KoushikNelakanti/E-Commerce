@@ -144,7 +144,7 @@ const Dashboard = () => {
                           {p.name}
                         </Typography>
                         <Typography variant='body2' color='text.secondary'>
-                          ${p.price.toFixed(2)}
+                          ₹{p.price.toLocaleString('en-IN')}
                         </Typography>
                       </Grid>
                       <Grid

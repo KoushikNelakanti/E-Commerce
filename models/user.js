@@ -33,6 +33,30 @@ const userSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    alertPreferences: {
+      emailNotifications: {
+        type: Boolean,
+        default: true,
+      },
+      smsNotifications: {
+        type: Boolean,
+        default: false,
+      },
+      pushNotifications: {
+        type: Boolean,
+        default: true,
+      },
+    },
+    phoneNumber: {
+      type: String,
+      trim: true,
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpire: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
@@ -64,6 +88,30 @@ userSchema.methods = {
     } catch (err) {
       return '';
     }
+  },
+
+  // Generate password reset token
+  getResetPasswordToken: function() {
+    // Generate token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    
+    // Hash token and set to resetPasswordToken field
+    this.resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+    
+    // Set expire time (10 minutes)
+    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    
+    return resetToken;
+  },
+
+  // Reset password
+  resetPassword: function(newPassword) {
+    this.password = newPassword;
+    this.resetPasswordToken = undefined;
+    this.resetPasswordExpire = undefined;
   },
 };
 

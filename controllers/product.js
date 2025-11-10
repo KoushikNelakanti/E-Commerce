@@ -3,6 +3,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const Product = require('../models/product');
 const { errorHandler } = require('../helpers/dbErrorHandler');
+const fakeStoreService = require('../services/fakeStoreService');
 
 // Get product by ID middleware
 exports.productById = async (req, res, next, id) => {
@@ -111,21 +112,36 @@ exports.update = async (req, res) => {
   });
 };
 
-// List products with filters and pagination
+// List products with filters and pagination (Enhanced with Fake Store API)
 exports.list = async (req, res) => {
-  const order = req.query.order || 'asc';
-  const sortBy = req.query.sortBy || '_id';
-  const limit = req.query.limit ? parseInt(req.query.limit) : 6;
-
   try {
-    const products = await Product.find()
-      .select('-photo')
-      .populate('category')
-      .sort([[sortBy, order]])
-      .limit(limit)
-      .exec();
-    res.json(products);
+    const options = {
+      page: parseInt(req.query.page) || 1,
+      limit: parseInt(req.query.limit) || 12,
+      category: req.query.category,
+      minPrice: req.query.minPrice,
+      maxPrice: req.query.maxPrice,
+      search: req.query.search,
+      sortBy: req.query.sortBy || 'createdAt',
+      order: req.query.order || 'desc'
+    };
+
+    const result = await fakeStoreService.getProducts(options);
+    
+    // Format products for frontend (handle both local and external images)
+    const formattedProducts = result.products.map(product => {
+      const productObj = product.toObject();
+      // Remove photo data for performance, keep imageUrl for external images
+      delete productObj.photo;
+      return productObj;
+    });
+
+    res.json({
+      ...result,
+      products: formattedProducts
+    });
   } catch (error) {
+    console.error('Error listing products:', error);
     return res.status(400).json({ error: 'Products not found' });
   }
 };
@@ -236,5 +252,114 @@ exports.decreaseQuantity = async (req, res, next) => {
     next();
   } catch (error) {
     return res.status(400).json({ error: 'Could not update product' });
+  }
+};
+
+// Sync products from Fake Store API
+exports.syncFakeStoreProducts = async (req, res) => {
+  try {
+    const sellerId = req.profile._id;
+    
+    // Check if user is admin or seller
+    if (req.profile.role === 0) {
+      return res.status(403).json({
+        error: 'Access denied. Only sellers and admins can sync products.'
+      });
+    }
+
+    console.log(`Starting Fake Store API sync for seller: ${req.profile.name}`);
+    
+    const syncedProducts = await fakeStoreService.syncProductsToDatabase(sellerId);
+    
+    res.json({
+      success: true,
+      message: `Successfully synced ${syncedProducts.length} products from Fake Store API`,
+      syncedCount: syncedProducts.length,
+      products: syncedProducts.map(p => ({
+        id: p._id,
+        name: p.name,
+        price: p.price,
+        category: p.category
+      }))
+    });
+  } catch (error) {
+    console.error('Error syncing Fake Store products:', error);
+    return res.status(500).json({
+      error: 'Failed to sync products from Fake Store API'
+    });
+  }
+};
+
+// Update prices from Fake Store API
+exports.updatePricesFromAPI = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.profile.role !== 2) {
+      return res.status(403).json({
+        error: 'Access denied. Only admins can update prices from API.'
+      });
+    }
+
+    const updatedCount = await fakeStoreService.updatePricesFromAPI();
+    
+    res.json({
+      success: true,
+      message: `Successfully updated prices for ${updatedCount} products`,
+      updatedCount
+    });
+  } catch (error) {
+    console.error('Error updating prices from API:', error);
+    return res.status(500).json({
+      error: 'Failed to update prices from Fake Store API'
+    });
+  }
+};
+
+// Get product statistics
+exports.getProductStats = async (req, res) => {
+  try {
+    const stats = await fakeStoreService.getProductStats();
+    
+    res.json({
+      success: true,
+      stats
+    });
+  } catch (error) {
+    console.error('Error getting product stats:', error);
+    return res.status(500).json({
+      error: 'Failed to get product statistics'
+    });
+  }
+};
+
+// Get products by category (enhanced)
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const options = {
+      page: parseInt(req.query.page) || 1,
+      limit: parseInt(req.query.limit) || 12,
+      category: category,
+      sortBy: req.query.sortBy || 'createdAt',
+      order: req.query.order || 'desc'
+    };
+
+    const result = await fakeStoreService.getProducts(options);
+    
+    // Format products for frontend
+    const formattedProducts = result.products.map(product => {
+      const productObj = product.toObject();
+      delete productObj.photo;
+      return productObj;
+    });
+
+    res.json({
+      ...result,
+      products: formattedProducts,
+      category
+    });
+  } catch (error) {
+    console.error('Error getting products by category:', error);
+    return res.status(400).json({ error: 'Products not found for this category' });
   }
 };

@@ -29,6 +29,8 @@ import {
   ExitToApp,
   Store,
   Menu as MenuIcon,
+  NotificationsActive,
+  AdminPanelSettings,
 } from '@mui/icons-material';
 
 const MaterialAppBar = () => {
@@ -78,10 +80,22 @@ const MaterialAppBar = () => {
       show: isAuthenticated() && isAuthenticated().user.role === 0,
     },
     {
-      path: '/admin/dashboard',
-      label: 'Dashboard',
-      icon: <Dashboard />,
+      path: '/user/alerts',
+      label: 'My Alerts',
+      icon: <NotificationsActive />,
+      show: isAuthenticated() && isAuthenticated().user.role === 0,
+    },
+    {
+      path: '/seller/dashboard',
+      label: 'Seller Dashboard',
+      icon: <Store />,
       show: isAuthenticated() && isAuthenticated().user.role === 1,
+    },
+    {
+      path: '/admin/dashboard',
+      label: 'Admin Dashboard',
+      icon: <AdminPanelSettings />,
+      show: isAuthenticated() && isAuthenticated().user.role === 2,
     },
     {
       path: '/signin',

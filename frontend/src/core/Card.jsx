@@ -21,6 +21,8 @@ import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { addItem, updateItem, removeItem } from './cartHelpers';
+import PriceAlert from '../alerts/PriceAlert';
+import StockAlert from '../alerts/StockAlert';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -188,7 +190,7 @@ const Card = ({
 
           <Stack direction='row' spacing={1} sx={{ mb: 1 }}>
             <Typography variant='body1' fontWeight='bold'>
-              ${product.price}
+              ₹{product.price.toLocaleString('en-IN')}
             </Typography>
             {showStock(product.quantity)}
           </Stack>
@@ -210,6 +212,24 @@ const Card = ({
           >
             Added {moment(product.createdAt).fromNow()}
           </Typography>
+
+          {/* Alert Components */}
+          <Box sx={{ mb: 2 }}>
+            <PriceAlert 
+              product={product} 
+              onAlertCreated={() => {
+                setSnackbarMessage('Price alert created successfully!');
+                setOpenSnackbar(true);
+              }}
+            />
+            <StockAlert 
+              product={product} 
+              onAlertCreated={() => {
+                setSnackbarMessage('Stock alert created successfully!');
+                setOpenSnackbar(true);
+              }}
+            />
+          </Box>
 
           <Box
             sx={{

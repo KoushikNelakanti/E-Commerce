@@ -13,6 +13,9 @@ const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const braintreeRoutes = require('./routes/braintree');
 const orderRoutes = require('./routes/order');
+const alertRoutes = require('./routes/alert');
+const sellerRoutes = require('./routes/seller');
+const alertScheduler = require('./services/alertScheduler');
 
 // app
 const app = express();
@@ -41,6 +44,8 @@ app.use('/api', categoryRoutes);
 app.use('/api', productRoutes);
 app.use('/api', braintreeRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', alertRoutes);
+app.use('/api', sellerRoutes);
 
 // Server static assets if in production
 if (process.env.NODE_ENV === 'production') {
@@ -56,4 +61,7 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  
+  // Start the alert scheduler
+  alertScheduler.start();
 });

@@ -4,7 +4,7 @@ import { isAuthenticated } from './index';
 
 const AdminRoute = ({ children }) => {
   const auth = isAuthenticated();
-  return auth && auth.user.role === 1 ? (
+  return auth && auth.user.role === 2 ? (
     children
   ) : (
     <Navigate to='/signin' replace />

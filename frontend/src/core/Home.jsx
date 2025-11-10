@@ -16,8 +16,12 @@ const Home = () => {
       if (data.error) {
         setError(data.error);
       } else {
-        setProductsBySell(data);
+        // Ensure data is an array
+        setProductsBySell(Array.isArray(data) ? data : []);
       }
+    }).catch((err) => {
+      console.error('Error loading products by sell:', err);
+      setProductsBySell([]);
     });
   };
 
@@ -26,8 +30,12 @@ const Home = () => {
       if (data.error) {
         setError(data.error);
       } else {
-        setProductsByArrival(data);
+        // Ensure data is an array
+        setProductsByArrival(Array.isArray(data) ? data : []);
       }
+    }).catch((err) => {
+      console.error('Error loading products by arrival:', err);
+      setProductsByArrival([]);
     });
   };
 
@@ -60,9 +68,15 @@ const Home = () => {
               mb: 4,
             }}
           >
-            {productsByArrival.map((product, i) => (
-              <Card key={i} product={product} />
-            ))}
+            {Array.isArray(productsByArrival) && productsByArrival.length > 0 ? (
+              productsByArrival.map((product, i) => (
+                <Card key={i} product={product} />
+              ))
+            ) : (
+              <Typography variant="body1" color="text.secondary">
+                No new arrivals available at the moment.
+              </Typography>
+            )}
           </Box>
 
           <Typography variant='h4' gutterBottom>
@@ -79,9 +93,15 @@ const Home = () => {
               gap: 3,
             }}
           >
-            {productsBySell.map((product, i) => (
-              <Card key={i} product={product} />
-            ))}
+            {Array.isArray(productsBySell) && productsBySell.length > 0 ? (
+              productsBySell.map((product, i) => (
+                <Card key={i} product={product} />
+              ))
+            ) : (
+              <Typography variant="body1" color="text.secondary">
+                No best sellers available at the moment.
+              </Typography>
+            )}
           </Box>
         </Box>
       </Container>
